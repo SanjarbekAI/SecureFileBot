@@ -1,19 +1,27 @@
-# app/models.py
-from sqlalchemy import Column, Integer, String, DateTime, func
-from src.config.database import Base
+import sqlalchemy
+from sqlalchemy import DateTime, func
 
-class User(Base):
-    __tablename__ = "users"
+from src.config.constants import UserStatus
+from src.config.database import metadata
 
-    id = Column(Integer, primary_key=True, index=True)
-    username = Column(String(50), unique=True, nullable=False)
-    email = Column(String(100), unique=True, nullable=False)
-    created_at = Column(DateTime, server_default=func.now(), nullable=False)
-
-class Post(Base):
-    __tablename__ = "posts"
-
-    id = Column(Integer, primary_key=True, index=True)
-    title = Column(String(200), nullable=False)
-    content = Column(String, nullable=False)
-    created_at = Column(DateTime, server_default=func.now(), nullable=False)
+users = sqlalchemy.Table(
+    "users",
+    metadata,
+    sqlalchemy.Column("id", sqlalchemy.Integer, primary_key=True),
+    sqlalchemy.Column("username", sqlalchemy.String(50), nullable=True),
+    sqlalchemy.Column("full_name", sqlalchemy.String(100), nullable=True),
+    sqlalchemy.Column("language", sqlalchemy.String(10)),
+    sqlalchemy.Column("chat_id", sqlalchemy.BigInteger, unique=True),
+    sqlalchemy.Column("phone_number", sqlalchemy.String(20), nullable=True),
+    sqlalchemy.Column(
+        "status",
+        sqlalchemy.String(20),
+        server_default=sqlalchemy.text(f"'{UserStatus.active}'"),
+    ),
+    sqlalchemy.Column(
+        "created_at", DateTime(timezone=True), server_default=func.now()
+    ),
+    sqlalchemy.Column(
+        "updated_at", DateTime(timezone=True), onupdate=func.now()
+    ),
+)
