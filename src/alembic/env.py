@@ -5,7 +5,7 @@ from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 
 from src.config.env_variables import DATABASE_URL
-from src.config.models import metadata
+from src.config.db.models import metadata
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
